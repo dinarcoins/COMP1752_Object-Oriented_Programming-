@@ -15,6 +15,7 @@ class UpdateVideosApp:
     def __init__(self, master):
         self.master = master
         master.title("Update Videos")
+        master.geometry('750x350')
 
         self.label = tk.Label(master, text="Select video to update:")
         self.label.pack()
@@ -31,6 +32,9 @@ class UpdateVideosApp:
         self.update_button = tk.Button(master, text="Update List")
         self.update_button.pack()
 
-root = tk.Tk()
-app = UpdateVideosApp(root)
-root.mainloop()
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    fonts.configure()
+    app = UpdateVideosApp(root)
+    root.mainloop()
