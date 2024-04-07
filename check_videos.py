@@ -81,7 +81,7 @@ class CheckVideos():
 
     def list_videos_clicked(self):
         # Get list of all videos from library (lib)
-        video_list = lib.list_all()
+        video_list = lib.list_all(True)
         # Display the video list in the list_txt cell
         set_text(self.list_txt, video_list)
         # Update status_lbl label to "List Videos button was clicked!"
