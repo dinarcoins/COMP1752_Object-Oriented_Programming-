@@ -6,7 +6,6 @@ import tkinter.scrolledtext as tkst
 import video_library as lib
 import font_manager as fonts
 
-
 def set_text(text_area, content):
     text_area.delete("1.0", tk.END)
     text_area.insert(1.0, content)
@@ -19,13 +18,15 @@ class CreateVideoListApp:
         window.title("Create Video")
 
         list_videos_btn = tk.Button(
-        window, text="Add Videos", command=self.list_videos_clicked)
+        window, text="Add Videos", command=self.add_video)
         list_videos_btn.grid(row=0, column=0, padx=10, pady=10)
 
-        
         play_video_btn = tk.Button(
-        window, text="Play", command=self.list_videos_clicked)
+        window, text="Play", command=self.play_video)
         play_video_btn.grid(row=0, column=1, padx=10, pady=10)
+
+        self.input_txt = tk.Entry(window, width=3)
+        self.input_txt.grid(row=0, column=2, padx=10, pady=10) 
 
         check_video_btn = tk.Button(
             window, text="Delete Video", command=self.delete_video_func)
@@ -60,13 +61,41 @@ class CreateVideoListApp:
 
     def list_videos_clicked(self):
         self.status_lbl.configure(text="Add Videos button was clicked!")
-        video_list = lib.list_all()
+        video_list = lib.list_all(False)
         set_text(self.list_txt, video_list)
 
     def play_video(self):
-        self.status_lbl.configure(text="List Videos button was clicked!")
-        video_list = lib.list_all()
+        return 0
+        # video_list = lib.list_all(False)
+        # set_text(self.list_txt, video_list)
+        # key = self.input_txt.get()
+        # name = lib.get_name(key)
+
+        # if name is not None:
+        #     director = lib.get_director(key)
+        #     rating = lib.get_rating(key)
+        #     play_count = lib.get_play_count(key)
+        #     video_details = f"{name}\n{director}\nrating: {rating}\nplays: {play_count}"
+        #     set_text(self.video_txt, video_details)
+        # else:
+        #     set_text(self.video_txt, f"Video {key} not found")
+        # self.status_lbl.configure(text="Play Videos button was clicked!")
+
+    def add_video(self):
+        video_list = lib.list_all(False)
         set_text(self.list_txt, video_list)
+        key = self.input_txt.get()
+        name = lib.get_name(key)
+
+        if name is not None:
+            director = lib.get_director(key)
+            rating = lib.get_rating(key)
+            play_count = lib.get_play_count(key)
+            video_details = f"{name}\n{director}\nrating: {rating}\nplays: {play_count}"
+            set_text(self.video_txt, video_details)
+        else:
+            set_text(self.video_txt, f"Video {key} not found")
+        self.status_lbl.configure(text="Add Video button was clicked!")
 
 
 if __name__ == "__main__":

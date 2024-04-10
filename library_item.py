@@ -7,9 +7,12 @@ class LibraryItem:
         # Initialize the play_count attribute with an initial value of 0
         self.play_count = 0
 
-    def info(self):
+    def info(self, haveRaf: bool):
         # Returns a string containing information about the LibraryItem object
-        return f"{self.name} - {self.director} {self.stars()}"
+        if haveRaf : 
+            return f"{self.name} - {self.director} {self.stars()}"
+        else :
+            return f"{self.name} - {self.director} "
 
     def stars(self):
         # Create a string of * signs corresponding to the rating of the LibraryItem object
