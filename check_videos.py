@@ -1,6 +1,6 @@
 import tkinter as tk
 import tkinter.scrolledtext as tkst
-from constants import video_list
+from video_library import video_list 
 
 def checkVideoWindow(mainWindow):
     def list_all_videos():

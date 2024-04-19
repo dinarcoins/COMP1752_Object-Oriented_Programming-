@@ -1,5 +1,5 @@
 import tkinter as tk
-from constants import video_list 
+from video_library import video_list 
 
 def updateVideoWindow(mainWindow):
     def update_video_rating():
