@@ -1,10 +1,16 @@
 class LibraryItem:
     # Initialize a LibraryItem object with name, director and rating properties
-    def __init__(self, name, director, rating=0):
+    def __init__(self, video_id, name, director, rating=0):
+        # self.name = name
+        # self.director = director
+        # self.rating = rating
+        # # Initialize the play_count attribute with an initial value of 0
+        # self.play_count = 0
+
+        self.id = video_id
         self.name = name
         self.director = director
         self.rating = rating
-        # Initialize the play_count attribute with an initial value of 0
         self.play_count = 0
 
     def info(self, haveRaf: bool):

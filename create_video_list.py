@@ -1,105 +1,90 @@
-# create_video_list.py - Prototype GUI
-
 import tkinter as tk
 import tkinter.scrolledtext as tkst
+from constants import video_list 
 
-import video_library as lib
-import font_manager as fonts
+def videoCreationWindow(mainWindow): 
+    def play_all_videos():
+        for video in video_list:
+            video["rating"] += 1
+        set_bottom_text(get_video_info())  
 
-def set_text(text_area, content):
-    text_area.delete("1.0", tk.END)
-    text_area.insert(1.0, content)
+    def list_all_videos():
+        set_bottom_text(get_video_info()) 
 
+    def list_video():
+        set_text(get_video_info())
 
-class CreateVideoListApp:
-    def __init__(self, window):
-        self.window = window
-        window.geometry('750x350')
-        window.title("Create Video")
+    def get_video_info():
+        video_info = ""
+        for video in video_list:
+            video_info += f"ID: {video['id']}, Name: {video['name']}, Director: {video['director']}, Rating: {'*' * video['rating']}, Play Count: {video['play_count']}\n"
+        return video_info
 
-        list_videos_btn = tk.Button(
-        window, text="Add Videos", command=self.add_video)
-        list_videos_btn.grid(row=0, column=0, padx=10, pady=10)
+    def delete_video():
+        id_to_delete = int(delete_id_entry.get())
+        video_list[:] = [
+            video for video in video_list if video["id"] != id_to_delete]
+        set_bottom_text(get_video_info())
+        delete_id_entry.delete(0, tk.END)
 
-        play_video_btn = tk.Button(
-        window, text="Play", command=self.play_video)
-        play_video_btn.grid(row=0, column=1, padx=10, pady=10)
+    def add_video():
+        new_video = {
+            "id": int(id_entry.get()),
+            "name": name_entry.get(),
+            "director": director_entry.get(),
+            "rating": int(rating_entry.get()),
+            "play_count": 0
+        }
+        video_list.append(new_video)
+        list_all_videos()
+        id_entry.delete(0, tk.END)
+        name_entry.delete(0, tk.END)
+        director_entry.delete(0, tk.END)
+        rating_entry.delete(0, tk.END)
 
-        self.input_txt = tk.Entry(window, width=3)
-        self.input_txt.grid(row=0, column=2, padx=10, pady=10) 
+    def set_text(content):
+        video_text_area.delete("1.0", tk.END)
+        video_text_area.insert("1.0", content)
 
-        check_video_btn = tk.Button(
-            window, text="Delete Video", command=self.delete_video_func)
-        check_video_btn.grid(row=0, column=3, padx=10, pady=10)
+    def set_bottom_text(content):
+        video_list_text.delete("1.0", tk.END)
+        video_list_text.insert("1.0", content)
 
-        self.list_txt = tkst.ScrolledText(
-            window, width=48, height=12, wrap="none")
-        self.list_txt.grid(row=1, column=0, columnspan=3,
-                           sticky="W", padx=10, pady=10)
-
-        self.video_txt = tk.Text(window, width=48, height=12, wrap="none")
-        self.video_txt.grid(row=1, column=3, sticky="NW", padx=10, pady=10)
-
-        self.status_lbl = tk.Label(window, text="", font=("Helvetica", 10))
-        self.status_lbl.grid(row=2, column=0, columnspan=4,
-                             sticky="W", padx=10, pady=10)
-
-        self.list_videos_clicked()
-
-    def delete_video_func(self):
-        self.status_lbl.configure(text="Delete Video button was clicked!")
-        key = self.input_txt.get()
-        name = lib.get_name(key)
-        if name is not None:
-            director = lib.get_director(key)
-            rating = lib.get_rating(key)
-            play_count = lib.get_play_count(key)
-            video_details = f"{name}\n{director}\nrating: {rating}\nplays: {play_count}"
-            set_text(self.video_txt, video_details)
-        else:
-            set_text(self.video_txt, f"Video {key} not found")
-
-    def list_videos_clicked(self):
-        self.status_lbl.configure(text="Add Videos button was clicked!")
-        video_list = lib.list_all(False)
-        set_text(self.list_txt, video_list)
-
-    def play_video(self):
-        return 0
-        # video_list = lib.list_all(False)
-        # set_text(self.list_txt, video_list)
-        # key = self.input_txt.get()
-        # name = lib.get_name(key)
-
-        # if name is not None:
-        #     director = lib.get_director(key)
-        #     rating = lib.get_rating(key)
-        #     play_count = lib.get_play_count(key)
-        #     video_details = f"{name}\n{director}\nrating: {rating}\nplays: {play_count}"
-        #     set_text(self.video_txt, video_details)
-        # else:
-        #     set_text(self.video_txt, f"Video {key} not found")
-        # self.status_lbl.configure(text="Play Videos button was clicked!")
-
-    def add_video(self):
-        video_list = lib.list_all(False)
-        set_text(self.list_txt, video_list)
-        key = self.input_txt.get()
-        name = lib.get_name(key)
-
-        if name is not None:
-            director = lib.get_director(key)
-            rating = lib.get_rating(key)
-            play_count = lib.get_play_count(key)
-            video_details = f"{name}\n{director}\nrating: {rating}\nplays: {play_count}"
-            set_text(self.video_txt, video_details)
-        else:
-            set_text(self.video_txt, f"Video {key} not found")
-        self.status_lbl.configure(text="Add Video button was clicked!")
-
-
-if __name__ == "__main__":
     window = tk.Tk()
-    fonts.configure()
-    app = CreateVideoListApp(window)
+    window.title("Create Video")
+    video_text_area = tkst.ScrolledText(window, width=50, height=10, wrap=tk.WORD)
+    video_text_area.grid(row=0, column=0, columnspan=5, padx=10, pady=10)
+    id_label = tk.Label(window, text="ID:")
+    id_label.grid(row=1, column=0, padx=5, pady=5)
+    id_entry = tk.Entry(window, width=5)
+    id_entry.grid(row=2, column=0, padx=5, pady=5)
+    name_label = tk.Label(window, text="Name:")
+    name_label.grid(row=1, column=1, padx=5, pady=5)
+    name_entry = tk.Entry(window, width=20)
+    name_entry.grid(row=2, column=1, padx=5, pady=5)
+    director_label = tk.Label(window, text="Director:")
+    director_label.grid(row=1, column=2, padx=5, pady=5)
+    director_entry = tk.Entry(window, width=20)
+    director_entry.grid(row=2, column=2, padx=5, pady=5)
+    rating_label = tk.Label(window, text="Rating:")
+    rating_label.grid(row=1, column=3, padx=5, pady=5)
+    rating_entry = tk.Entry(window, width=5)
+    rating_entry.grid(row=2, column=3, padx=5, pady=5)
+    add_btn = tk.Button(window, text="Add", command=add_video)
+    add_btn.grid(row=2, column=4, padx=10, pady=10)
+    list_all_btn = tk.Button(window, text="List All", command=list_all_videos)
+    list_all_btn.grid(row=3, column=0, padx=10, pady=10)
+    play_all_btn = tk.Button(window, text="Play All", command=play_all_videos)
+    play_all_btn.grid(row=3, column=1, padx=10, pady=10)
+    delete_id_label = tk.Label(window, text="Delete ID:")
+    delete_id_label.grid(row=3, column=2, padx=5, pady=5)
+    delete_id_entry = tk.Entry(window, width=5)
+    delete_id_entry.grid(row=3, column=3, padx=5, pady=5)
+    delete_btn = tk.Button(window, text="Delete", command=delete_video)
+    delete_btn.grid(row=3, column=4, padx=10, pady=10)
+    video_list_text = tkst.ScrolledText(window, width=50, height=10, wrap=tk.WORD)
+    video_list_text.grid(row=4, column=0, columnspan=5, padx=10, pady=10)
+    video_list_text.delete("1.0", tk.END)
+    list_video()
+
     window.mainloop()
